@@ -11,15 +11,15 @@ function divElementEnostavniTekst(sporocilo) {
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   }
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaPng) {
-    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />');
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   }
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaJpg) {
-    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('jpg\' /&gt;').join('jpg width:"200";margin-left:"20"/>');
-    return $('<div id="slike"></div>').html(sporocilo);
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('jpg\' /&gt;').join('jpg\' />');
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
   }
   if (jeSmesko) {
-    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />')
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />')
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
