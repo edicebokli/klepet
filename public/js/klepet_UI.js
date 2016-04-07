@@ -76,8 +76,13 @@ function najdiPovezaveSlik(vhod) {
     var text = [];
     text = vhod.split(" ");
     for(var i = 0; i<text.length; i++){
-      text[i] = text[i].replace('http://', '<img src=\'http://');
-      text[i] = text[i].replace('https://', '<img src=\'https://');
+      var jpg = text[i].indexOf('.jpg') > -1;
+      var png = text[i].indexOf('.png') > -1;
+      var gif = text[i].indexOf('.gif') > -1;
+      if(jpg || png || gif){
+        text[i] = text[i].replace('http://', '<img src=\'http://');
+        text[i] = text[i].replace('https://', '<img src=\'https://');
+      }
       text[i] = text[i].replace('.png', '.png\' />');
       text[i] = text[i].replace('.jpg', '.jpg\' />');
       text[i] = text[i].replace('.gif', '.gif\' />');
