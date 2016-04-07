@@ -1,7 +1,13 @@
 function divElementEnostavniTekst(sporocilo) {
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
+  var jeSlika = sporocilo.indexOf('http://i.kinja-img.com/gawker-media/image/upload/m5g6imznbymcxkbpwpfc.jpg') > -1;
+  if (jeSlika) {
+    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('jpg\' /&gt;', 'jpg\' />');
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  
+  }
   if (jeSmesko) {
-    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
+    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />')
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
@@ -14,7 +20,9 @@ function divElementHtmlTekst(sporocilo) {
 
 function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
+  sporocilo = najdiPovezaveSlik(sporocilo);
   sporocilo = dodajSmeske(sporocilo);
+  
   var sistemskoSporocilo;
 
   if (sporocilo.charAt(0) == '/') {
@@ -49,6 +57,15 @@ function filtirirajVulgarneBesede(vhod) {
       return zamenjava;
     });
   }
+  return vhod;
+}
+
+function najdiPovezaveSlik(vhod) {
+    vhod = vhod.replace('http://', '<img src=http://');
+    vhod = vhod.replace('https://', '<img src=https://');
+    vhod = vhod.replace('.png', '.png />');
+    vhod = vhod.replace('.jpg', '.jpg />');
+    vhod = vhod.replace('.gif', '.gif />');
   return vhod;
 }
 
@@ -99,6 +116,11 @@ $(document).ready(function() {
     for (var i=0; i < uporabniki.length; i++) {
       $('#seznam-uporabnikov').append(divElementEnostavniTekst(uporabniki[i]));
     }
+    $('#seznam-uporabnikov div').click(function() {
+      var sporocilo = $('#poslji-sporocilo');
+      sporocilo.val('/zasebno "'+ $(this).text()+'" ');
+      $('#poslji-sporocilo').focus();
+    });
   });
 
   setInterval(function() {
