@@ -26,6 +26,15 @@ a {
   margin-bottom: 1em;
   margin-right: 10px;
 }
+img{
+  max-width: 200px;
+  width: auto;
+  height: auto;
+  margin-left: 20px;
+  margin-bottom: 1em;
+  margin-right: 10px;
+}
+
 
 #seznam-kanalov, #seznam-uporabnikov {
   float: right;

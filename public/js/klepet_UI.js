@@ -1,10 +1,22 @@
 function divElementEnostavniTekst(sporocilo) {
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
-  var jeSlika = sporocilo.indexOf('http://i.kinja-img.com/gawker-media/image/upload/m5g6imznbymcxkbpwpfc.jpg') > -1;
-  if (jeSlika) {
-    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('jpg\' /&gt;', 'jpg\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  var jeSlikaHttp = sporocilo.indexOf('http://') > -1;
+  var jeSlikaHttps = sporocilo.indexOf('https://') > -1;
+  var jeSlikaGif = sporocilo.indexOf('.gif') > -1;
+  var jeSlikaPng = sporocilo.indexOf('.png') > -1;
+  var jeSlikaJpg = sporocilo.indexOf('.jpg') > -1;
   
+  if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaGif) {
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('gif\' /&gt;').join('gif\' />');
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  }
+  if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaPng) {
+    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  }
+  if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaJpg) {
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('jpg\' /&gt;').join('jpg width:"200";margin-left:"20"/>');
+    return $('<div id="slike"></div>').html(sporocilo);
   }
   if (jeSmesko) {
     sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />')
@@ -61,11 +73,17 @@ function filtirirajVulgarneBesede(vhod) {
 }
 
 function najdiPovezaveSlik(vhod) {
-    vhod = vhod.replace('http://', '<img src=http://');
-    vhod = vhod.replace('https://', '<img src=https://');
-    vhod = vhod.replace('.png', '.png />');
-    vhod = vhod.replace('.jpg', '.jpg />');
-    vhod = vhod.replace('.gif', '.gif />');
+    var text = [];
+    text = vhod.split(" ");
+    for(var i = 0; i<text.length; i++){
+      text[i] = text[i].replace('http://', '<img src=\'http://');
+      text[i] = text[i].replace('https://', '<img src=\'https://');
+      text[i] = text[i].replace('.png', '.png\' />');
+      text[i] = text[i].replace('.jpg', '.jpg\' />');
+      text[i] = text[i].replace('.gif', '.gif\' />');
+    }
+    vhod = text.join(" ");
+    
   return vhod;
 }
 
