@@ -8,15 +8,15 @@ function divElementEnostavniTekst(sporocilo) {
   
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaGif) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('gif\' /&gt;').join('gif\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+    return $('<div class = "slika" style="font-weight: bold"></div>').html(sporocilo);
   }
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaPng) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+    return $('<div class = "slika" style="font-weight: bold"></div>').html(sporocilo);
   }
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaJpg) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('jpg\' /&gt;').join('jpg\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+    return $('<div class = "slika" style="font-weight: bold"></div>').html(sporocilo);
   }
   if (jeSmesko) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />')
@@ -80,8 +80,8 @@ function najdiPovezaveSlik(vhod) {
       var png = text[i].indexOf('.png') > -1;
       var gif = text[i].indexOf('.gif') > -1;
       if(jpg || png || gif){
-        text[i] = text[i].replace('http://', '<img src=\'http://');
-        text[i] = text[i].replace('https://', '<img src=\'https://');
+        text[i] = text[i].replace('http://', '<img width="200" src=\'http://');
+        text[i] = text[i].replace('https://', '<img width="200" src=\'https://');
       }
       text[i] = text[i].replace('.png', '.png\' />');
       text[i] = text[i].replace('.jpg', '.jpg\' />');
