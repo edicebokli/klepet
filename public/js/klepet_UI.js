@@ -1,7 +1,25 @@
 function divElementEnostavniTekst(sporocilo) {
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
+  var jeSlikaHttp = sporocilo.indexOf('http://') > -1;
+  var jeSlikaHttps = sporocilo.indexOf('https://') > -1;
+  var jeSlikaGif = sporocilo.indexOf('.gif') > -1;
+  var jeSlikaPng = sporocilo.indexOf('.png') > -1;
+  var jeSlikaJpg = sporocilo.indexOf('.jpg') > -1;
+  
+  if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaGif) {
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('gif\' /&gt;').join('gif\' />');
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  }
+  if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaPng) {
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />');
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  }
+  if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaJpg) {
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('jpg\' /&gt;').join('jpg\' />');
+    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+  }
   if (jeSmesko) {
-    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
+    sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />')
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
@@ -14,7 +32,9 @@ function divElementHtmlTekst(sporocilo) {
 
 function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
+  sporocilo = najdiPovezaveSlik(sporocilo);
   sporocilo = dodajSmeske(sporocilo);
+  
   var sistemskoSporocilo;
 
   if (sporocilo.charAt(0) == '/') {
@@ -49,6 +69,26 @@ function filtirirajVulgarneBesede(vhod) {
       return zamenjava;
     });
   }
+  return vhod;
+}
+
+function najdiPovezaveSlik(vhod) {
+    var text = [];
+    text = vhod.split(" ");
+    for(var i = 0; i<text.length; i++){
+      var jpg = text[i].indexOf('.jpg') > -1;
+      var png = text[i].indexOf('.png') > -1;
+      var gif = text[i].indexOf('.gif') > -1;
+      if(jpg || png || gif){
+        text[i] = text[i].replace('http://', '<img src=\'http://');
+        text[i] = text[i].replace('https://', '<img src=\'https://');
+      }
+      text[i] = text[i].replace('.png', '.png\' />');
+      text[i] = text[i].replace('.jpg', '.jpg\' />');
+      text[i] = text[i].replace('.gif', '.gif\' />');
+    }
+    vhod = text.join(" ");
+    
   return vhod;
 }
 
@@ -100,7 +140,7 @@ $(document).ready(function() {
       $('#seznam-uporabnikov').append(divElementEnostavniTekst(uporabniki[i]));
     }
     $('#seznam-uporabnikov div').click(function() {
-      sporocilo = $('#poslji-sporocilo');
+      var sporocilo = $('#poslji-sporocilo');
       sporocilo.val('/zasebno "'+ $(this).text()+'" ');
       $('#poslji-sporocilo').focus();
     });
