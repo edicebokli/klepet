@@ -5,6 +5,7 @@ function divElementEnostavniTekst(sporocilo) {
   var jeSlikaGif = sporocilo.indexOf('.gif') > -1;
   var jeSlikaPng = sporocilo.indexOf('.png') > -1;
   var jeSlikaJpg = sporocilo.indexOf('.jpg') > -1;
+  var jeVideo = sporocilo.indexOf('https://www.youtube.com/embed/') > -1;
   
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaGif) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('gif\' /&gt;').join('gif\' />');
@@ -17,6 +18,12 @@ function divElementEnostavniTekst(sporocilo) {
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaJpg) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('jpg\' /&gt;').join('jpg\' />');
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
+
+  if(jeVideo){
+    //sporocilo = sporocilo.split(/\</g).join('&lt;').split(/\>/g).join('&gt;').split('&lt;iframe').join('<iframe').split('/iframe\' &gt;').join('/iframe\'>');
+    sporocilo = sporocilo.replace('&lt;iframe', '<iframe').replace('&lt;/iframe;&gt;', '</iframe>').replace('allowfullscren;&gt', 'allowfullscreen>');
+    return $('<div class="youtube" style="font-weight: bold"></div>').html(sporocilo);
+
   }
   if (jeSmesko) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />')
@@ -34,7 +41,11 @@ function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
   sporocilo = najdiPovezaveSlik(sporocilo);
   sporocilo = dodajSmeske(sporocilo);
+<<<<<<< HEAD
   
+=======
+  sporocilo = dodajVideo(sporocilo);
+>>>>>>> youtube
   var sistemskoSporocilo;
 
   if (sporocilo.charAt(0) == '/') {
@@ -175,4 +186,18 @@ function dodajSmeske(vhodnoBesedilo) {
       preslikovalnaTabela[smesko] + "' />");
   }
   return vhodnoBesedilo;
+}
+
+function dodajVideo(sporocilo){
+  sporocilo = sporocilo.split('https://www.youtube.com/watch?v=').join('<iframe width="200" height="150" src="https://www.youtube.com/embed/');
+  var besede = [];
+  besede = sporocilo.split(' ');
+  for(var i = 0; i<besede.length; i++){
+    if(besede[i].indexOf('src="https://www.youtube.com/embed/') > -1){
+      besede[i] += "\" allowfullscreen></iframe>";
+    }
+  }
+  sporocilo = besede.join(' ');
+  return sporocilo;
+  
 }
