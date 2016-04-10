@@ -9,25 +9,25 @@ function divElementEnostavniTekst(sporocilo) {
   
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaGif) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('gif\' /&gt;').join('gif\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+    return $('<div class = "slika" style="font-weight: bold"></div>').html(sporocilo);
   }
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaPng) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+    return $('<div class = "slika" style="font-weight: bold"></div>').html(sporocilo);
   }
   if (!jeSmesko && (jeSlikaHttp || jeSlikaHttps) && jeSlikaJpg) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('jpg\' /&gt;').join('jpg\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+    return $('<div class = "slika" style="font-weight: bold"></div>').html(sporocilo);
+  }
 
   if(jeVideo){
-    //sporocilo = sporocilo.split(/\</g).join('&lt;').split(/\>/g).join('&gt;').split('&lt;iframe').join('<iframe').split('/iframe\' &gt;').join('/iframe\'>');
     sporocilo = sporocilo.replace('&lt;iframe', '<iframe').replace('&lt;/iframe;&gt;', '</iframe>').replace('allowfullscren;&gt', 'allowfullscreen>');
     return $('<div class="youtube" style="font-weight: bold"></div>').html(sporocilo);
 
   }
   if (jeSmesko) {
     sporocilo = sporocilo.split('/\</g').join('&lt;').split('/\>/g').join('&gt;').split('&lt;img').join('<img').split('png\' /&gt;').join('png\' />')
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
+    return $('<div class="smesko" style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
   }
@@ -41,11 +41,8 @@ function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
   sporocilo = najdiPovezaveSlik(sporocilo);
   sporocilo = dodajSmeske(sporocilo);
-<<<<<<< HEAD
-  
-=======
   sporocilo = dodajVideo(sporocilo);
->>>>>>> youtube
+
   var sistemskoSporocilo;
 
   if (sporocilo.charAt(0) == '/') {
@@ -91,8 +88,8 @@ function najdiPovezaveSlik(vhod) {
       var png = text[i].indexOf('.png') > -1;
       var gif = text[i].indexOf('.gif') > -1;
       if(jpg || png || gif){
-        text[i] = text[i].replace('http://', '<img src=\'http://');
-        text[i] = text[i].replace('https://', '<img src=\'https://');
+        text[i] = text[i].replace('http://', '<img width="200" src=\'http://');
+        text[i] = text[i].replace('https://', '<img width="200" src=\'https://');
       }
       text[i] = text[i].replace('.png', '.png\' />');
       text[i] = text[i].replace('.jpg', '.jpg\' />');
@@ -195,7 +192,6 @@ function dodajSmeske(vhodnoBesedilo) {
   }
   return vhodnoBesedilo;
 }
-
 function dodajVideo(sporocilo){
   sporocilo = sporocilo.split('https://www.youtube.com/watch?v=').join('<iframe width="200" height="150" src="https://www.youtube.com/embed/');
   var besede = [];
@@ -207,5 +203,4 @@ function dodajVideo(sporocilo){
   }
   sporocilo = besede.join(' ');
   return sporocilo;
-  
 }
